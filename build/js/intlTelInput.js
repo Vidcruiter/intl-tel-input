@@ -1078,7 +1078,7 @@
                     var title = this.highlightedItem.innerText;
                     var screenReader = document.querySelector("#screen-reader-announcements");
                     if (screenReader) {
-                        screenReader.html(title);
+                        screenReader.innerHTML = title;
                     }
                 }
             }, {
@@ -1117,7 +1117,7 @@
                     if (!navigator.userAgent.match(/Firefox/)) {
                         var screenReader = document.querySelector("#screen-reader-announcements");
                         if (screenReader) {
-                            screenReader.html(title);
+                            screenReader.innerHTML = title;
                         }
                     }
                     this._setSelectedCountryFlagTitleAttribute(countryCode, separateDialCode);
@@ -1154,7 +1154,7 @@
                     if (!navigator.userAgent.match(/Firefox/)) {
                         var _screenReader = document.querySelector("#screen-reader-announcements");
                         if (_screenReader) {
-                            _screenReader.html(title);
+                            _screenReader.innerHTML = title;
                         }
                     }
                     // return if the flag has changed or not
@@ -1214,7 +1214,7 @@
                     // @change clear for screen readers
                     var screenReader = document.querySelector("#screen-reader-announcements");
                     if (screenReader) {
-                        screenReader.html("");
+                        screenReader.innerHTML = "";
                     }
                     // update selected flag and active list item
                     var flagChanged = this._setFlag(listItem.getAttribute("data-country-code"));
@@ -1232,7 +1232,7 @@
                         if (!navigator.userAgent.match(/Firefox/)) {
                             // @change announce selected country code on change
                             if (screenReader) {
-                                screenReader.html(this.selectedFlag.getAttribute("title"));
+                                screenReader.innerHTML = this.selectedFlag.getAttribute("title");
                             }
                         }
                     }
