@@ -1176,7 +1176,7 @@ class Iti {
     const title = this.highlightedItem.innerText;
     const screenReader = document.querySelector('#screen-reader-announcements');
     if(screenReader){
-      screenReader.html(title);
+      screenReader.innerHTML = title;
     }
   }
 
@@ -1230,7 +1230,7 @@ class Iti {
     if (!navigator.userAgent.match(/Firefox/)) {
       const screenReader = document.querySelector('#screen-reader-announcements');
       if(screenReader){
-        screenReader.html(title);
+        screenReader.innerHTML = title;
       }
     }
 
@@ -1281,7 +1281,7 @@ class Iti {
     if (!navigator.userAgent.match(/Firefox/)) {
       const screenReader = document.querySelector('#screen-reader-announcements');
       if(screenReader){
-        screenReader.html(title);
+        screenReader.innerHTML = title;
       }
     }
     // return if the flag has changed or not
@@ -1362,7 +1362,7 @@ class Iti {
     // @change clear for screen readers
     const screenReader = document.querySelector('#screen-reader-announcements');
     if(screenReader){
-      screenReader.html('');
+      screenReader.innerHTML = '';
     }
 
     // update selected flag and active list item
@@ -1386,7 +1386,7 @@ class Iti {
       if (!navigator.userAgent.match(/Firefox/)) {
         // @change announce selected country code on change
         if(screenReader){
-          screenReader.html(this.selectedFlag.getAttribute("title"));
+          screenReader.innerHTML = this.selectedFlag.getAttribute("title");
         }
       }
     }
