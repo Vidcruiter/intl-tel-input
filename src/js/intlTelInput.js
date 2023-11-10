@@ -144,8 +144,6 @@ class Iti {
             navigator.userAgent
         );
 
-    this.isMobile = false;
-
     if (this.isMobile) {
       // trigger the mobile dropdown css
       document.body.classList.add("iti-mobile");

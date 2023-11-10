@@ -218,7 +218,6 @@
                     // rest of these declarations
                     // Note: to target Android Mobiles (and not Tablets), we must find 'Android' and 'Mobile'
                     this.isMobile = /Android.+Mobile|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                    this.isMobile = false;
                     if (this.isMobile) {
                         // trigger the mobile dropdown css
                         document.body.classList.add("iti-mobile");
