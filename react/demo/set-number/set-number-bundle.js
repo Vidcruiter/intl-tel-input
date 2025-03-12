@@ -25655,6 +25655,10 @@
       for (let i = 0; i < this.countries.length; i++) {
         const c = this.countries[i];
         const extraClass = i === 0 ? "iti__highlight" : "";
+        let label = "";
+        if (navigator.userAgent.match(/Firefox/)) {
+          label = `aria-label='${c.name} ${c.dialCode}'`;
+        }
         const listItem = createEl(
           "li",
           {
@@ -25664,7 +25668,8 @@
             role: "option",
             "data-dial-code": c.dialCode,
             "data-country-code": c.iso2,
-            "aria-selected": "false"
+            "aria-selected": "false",
+            "aria-label": label
           },
           this.countryList
         );
@@ -25759,6 +25764,11 @@
           e.preventDefault();
           e.stopPropagation();
           this._openDropdown();
+        }
+        if (!isDropdownHidden && e.key === "Enter") {
+          e.preventDefault();
+          e.stopPropagation();
+          this._handleEnterKey();
         }
         if (e.key === "Tab") {
           this._closeDropdown();
@@ -26185,6 +26195,11 @@
       if (shouldFocus) {
         this.highlightedItem.focus();
       }
+      const title = this?.highlightedItem?.innerText;
+      const screenReader = document.querySelector("#screen-reader-announcements");
+      if (screenReader) {
+        screenReader.innerHTML = title;
+      }
     }
     //* Find the country data for the given iso2 code
     //* the ignoreOnlyCountriesOption is only used during init() while parsing the onlyCountries array
@@ -26220,6 +26235,12 @@
         }
         this.selectedCountryInner.className = flagClass;
         this.selectedCountryA11yText.textContent = a11yText;
+        if (!navigator.userAgent.match(/Firefox/)) {
+          const screenReader = document.querySelector("#screen-reader-announcements");
+          if (screenReader) {
+            screenReader.innerHTML = a11yText;
+          }
+        }
       }
       this._setSelectedCountryTitleAttribute(iso2, separateDialCode);
       if (separateDialCode) {
@@ -26329,6 +26350,10 @@
     }
     //* Called when the user selects a list item from the dropdown.
     _selectListItem(listItem) {
+      const screenReader = document.querySelector("#screen-reader-announcements");
+      if (screenReader) {
+        screenReader.innerHTML = "";
+      }
       const countryChanged = this._setCountry(
         listItem.getAttribute("data-country-code")
       );
@@ -26337,6 +26362,11 @@
       this.telInput.focus();
       if (countryChanged) {
         this._triggerCountryChange();
+        if (!navigator.userAgent.match(/Firefox/)) {
+          if (screenReader) {
+            screenReader.innerHTML = this.selectedCountry.getAttribute("title");
+          }
+        }
       }
     }
     //* Close the dropdown and unbind any listeners.
@@ -26371,6 +26401,9 @@
         if (this.dropdown.parentNode) {
           this.dropdown.parentNode.removeChild(this.dropdown);
         }
+      }
+      if (!navigator.userAgent.match(/Firefox/)) {
+        this.selectedCountry.blur();
       }
       if (this._handlePageLoad) {
         window.removeEventListener("load", this._handlePageLoad);

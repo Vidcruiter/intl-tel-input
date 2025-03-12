@@ -7,7 +7,7 @@ for (let i = 0; i < allCountries.length; i++) {
   allCountries[i].name = defaultEnglishStrings[allCountries[i].iso2];
 }
 
-type UtilsLoader = () => Promise<{default: ItiUtils}>;
+type UtilsLoader = () => Promise<{ default: ItiUtils }>;
 
 interface IntlTelInputInterface {
   (input: HTMLInputElement, options?: SomeOptions): Iti;
@@ -70,7 +70,7 @@ interface AllOptions {
   formatAsYouType: boolean;
   formatOnDisplay: boolean;
   geoIpLookup: ((success: (iso2: string) => void, failure: () => void) => void) | null;
-  hiddenInput: ((telInputName: string) => {phone: string, country?: string}) | null;
+  hiddenInput: ((telInputName: string) => { phone: string, country?: string }) | null;
   i18n: I18n,
   initialCountry: string;
   loadUtils: UtilsLoader;
@@ -138,10 +138,10 @@ const defaults: AllOptions = {
   useFullscreenPopup:
     typeof navigator !== "undefined" && typeof window !== "undefined"
       ? //* We cannot just test screen size as some smartphones/website meta tags will report desktop resolutions.
-        //* Note: to target Android Mobiles (and not Tablets), we must find 'Android' and 'Mobile'
-        /Android.+Mobile|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent,
-        ) || window.innerWidth <= 500
+      //* Note: to target Android Mobiles (and not Tablets), we must find 'Android' and 'Mobile'
+      /Android.+Mobile|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      ) || window.innerWidth <= 500
       : false,
   //* The number type to enforce during validation.
   validationNumberTypes: ["MOBILE"],
@@ -755,6 +755,11 @@ export class Iti {
       //* Start by highlighting the first item (useful when countrySearch disabled).
       const extraClass = i === 0 ? "iti__highlight" : "";
 
+      // @change add aria label to li and hidden to contents
+      let label = "";
+      if (navigator.userAgent.match(/Firefox/)) {
+        label = `aria-label='${c.name} ${c.dialCode}'`;
+      }
       const listItem = createEl(
         "li",
         {
@@ -765,6 +770,7 @@ export class Iti {
           "data-dial-code": c.dialCode,
           "data-country-code": c.iso2,
           "aria-selected": "false",
+          "aria-label": label,
         },
         this.countryList,
       );
@@ -907,6 +913,15 @@ export class Iti {
         this._openDropdown();
       }
 
+      // @change add event for enter and spacebar when dropdown open
+      if (!isDropdownHidden && (e.key === "Enter")) {
+        // prevent form from being submitted if "ENTER" was pressed
+        e.preventDefault();
+        // prevent event from being handled again by document
+        e.stopPropagation();
+        this._handleEnterKey();
+      }
+
       //* Allow navigation from dropdown to input on TAB.
       if (e.key === "Tab") {
         this._closeDropdown();
@@ -930,7 +945,7 @@ export class Iti {
         //* Catch and ignore any errors to prevent unhandled-promise failures.
         //* The error from `attachUtils()` is also surfaced in each instance's
         //* `promise` property, so it's not getting lost by being ignored here.
-        intlTelInput.attachUtils(loadUtils)?.catch(() => {});
+        intlTelInput.attachUtils(loadUtils)?.catch(() => { });
       };
 
       //* If the plugin is being initialised after the window.load event has already been fired.
@@ -1188,7 +1203,7 @@ export class Iti {
 
     //* Listen for country selection.
     this._handleClickCountryList = (e): void => {
-    const listItem: HTMLElement | null = (e.target as HTMLElement)?.closest(".iti__country");
+      const listItem: HTMLElement | null = (e.target as HTMLElement)?.closest(".iti__country");
       if (listItem) {
         this._selectListItem(listItem);
       }
@@ -1504,6 +1519,13 @@ export class Iti {
     if (shouldFocus) {
       this.highlightedItem.focus();
     }
+
+    // @change added for screen readers
+    const title = this?.highlightedItem?.innerText;
+    const screenReader = document.querySelector("#screen-reader-announcements");
+    if (screenReader) {
+      screenReader.innerHTML = title;
+    }
   }
 
   //* Find the country data for the given iso2 code
@@ -1551,6 +1573,14 @@ export class Iti {
       }
       this.selectedCountryInner.className = flagClass;
       this.selectedCountryA11yText.textContent = a11yText;
+
+      // @change only read for non firefox
+      if (!navigator.userAgent.match(/Firefox/)) {
+        const screenReader = document.querySelector("#screen-reader-announcements");
+        if (screenReader) {
+          screenReader.innerHTML = a11yText;
+        }
+      }
     }
 
     this._setSelectedCountryTitleAttribute(iso2, separateDialCode);
@@ -1681,10 +1711,10 @@ export class Iti {
       //* Note: Must set placeholder to empty string if no country selected (globe icon showing).
       let placeholder = this.selectedCountryData.iso2
         ? intlTelInput.utils.getExampleNumber(
-            this.selectedCountryData.iso2,
-            nationalMode,
-            numberType,
-          )
+          this.selectedCountryData.iso2,
+          nationalMode,
+          numberType,
+        )
         : "";
 
       placeholder = this._beforeSetNumber(placeholder);
@@ -1697,6 +1727,11 @@ export class Iti {
 
   //* Called when the user selects a list item from the dropdown.
   private _selectListItem(listItem: HTMLElement): void {
+    // @change clear for screen readers
+    const screenReader = document.querySelector("#screen-reader-announcements");
+    if (screenReader) {
+      screenReader.innerHTML = "";
+    }
     //* Update selected country and active list item.
     const countryChanged = this._setCountry(
       listItem.getAttribute("data-country-code"),
@@ -1710,6 +1745,13 @@ export class Iti {
 
     if (countryChanged) {
       this._triggerCountryChange();
+      // @change announce selected country code on change if not firefox
+      if (!navigator.userAgent.match(/Firefox/)) {
+        // @change announce selected country code on change
+        if (screenReader) {
+          screenReader.innerHTML = this.selectedCountry.getAttribute("title");
+        }
+      }
     }
   }
 
@@ -1751,6 +1793,11 @@ export class Iti {
       if (this.dropdown.parentNode) {
         this.dropdown.parentNode.removeChild(this.dropdown);
       }
+    }
+
+    // @change only blur not firefox to stop reading twice
+    if (!navigator.userAgent.match(/Firefox/)) {
+      this.selectedCountry.blur();
     }
 
     //* Unhook any deferred resource loads.
