@@ -2106,7 +2106,7 @@ var Iti = class {
       const extraClass = i === 0 ? "iti__highlight" : "";
       let label = "";
       if (navigator.userAgent.match(/Firefox/)) {
-        label = `aria-label='${c.name} ${c.dialCode}'`;
+        label = `${c.name} ${c.dialCode}`;
       }
       const listItem = createEl(
         "li",
@@ -2643,11 +2643,6 @@ var Iti = class {
     }
     if (shouldFocus) {
       this.highlightedItem.focus();
-    }
-    const title = this?.highlightedItem?.innerText;
-    const screenReader = document.querySelector("#screen-reader-announcements");
-    if (screenReader) {
-      screenReader.innerHTML = title;
     }
   }
   //* Find the country data for the given iso2 code
