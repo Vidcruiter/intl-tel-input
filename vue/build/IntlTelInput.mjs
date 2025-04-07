@@ -1901,7 +1901,7 @@ class q {
     for (let e = 0; e < this.countries.length; e++) {
       const t = this.countries[e], i = e === 0 ? "iti__highlight" : "";
       let s = "";
-      navigator.userAgent.match(/Firefox/) && (s = `aria-label='${t.name} ${t.dialCode}'`);
+      navigator.userAgent.match(/Firefox/) && (s = `${t.name} ${t.dialCode}`);
       const n = y(
         "li",
         {
@@ -2187,16 +2187,13 @@ class q {
   }
   //* Remove highlighting from other list items and highlight the given item.
   _highlightListItem(e, t) {
-    var o;
     const i = this.highlightedItem;
     if (i && (i.classList.remove("iti__highlight"), i.setAttribute("aria-selected", "false")), this.highlightedItem = e, this.highlightedItem) {
       this.highlightedItem.classList.add("iti__highlight"), this.highlightedItem.setAttribute("aria-selected", "true");
-      const r = this.highlightedItem.getAttribute("id") || "";
-      this.selectedCountry.setAttribute("aria-activedescendant", r), this.options.countrySearch && this.searchInput.setAttribute("aria-activedescendant", r);
+      const s = this.highlightedItem.getAttribute("id") || "";
+      this.selectedCountry.setAttribute("aria-activedescendant", s), this.options.countrySearch && this.searchInput.setAttribute("aria-activedescendant", s);
     }
     t && this.highlightedItem.focus();
-    const s = (o = this == null ? void 0 : this.highlightedItem) == null ? void 0 : o.innerText, n = document.querySelector("#screen-reader-announcements");
-    n && (n.innerHTML = s);
   }
   //* Find the country data for the given iso2 code
   //* the ignoreOnlyCountriesOption is only used during init() while parsing the onlyCountries array

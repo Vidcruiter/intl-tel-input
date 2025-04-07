@@ -758,7 +758,7 @@ export class Iti {
       // @change add aria label to li and hidden to contents
       let label = "";
       if (navigator.userAgent.match(/Firefox/)) {
-        label = `aria-label='${c.name} ${c.dialCode}'`;
+        label = `${c.name} ${c.dialCode}`;
       }
       const listItem = createEl(
         "li",
@@ -1518,13 +1518,6 @@ export class Iti {
 
     if (shouldFocus) {
       this.highlightedItem.focus();
-    }
-
-    // @change added for screen readers
-    const title = this?.highlightedItem?.innerText;
-    const screenReader = document.querySelector("#screen-reader-announcements");
-    if (screenReader) {
-      screenReader.innerHTML = title;
     }
   }
 
