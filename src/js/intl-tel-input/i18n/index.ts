@@ -7,6 +7,7 @@ export { default as ca, countryTranslations as caCountryTranslations, interfaceT
 export { default as cs, countryTranslations as csCountryTranslations, interfaceTranslations as csInterfaceTranslations } from "./cs";
 export { default as da, countryTranslations as daCountryTranslations, interfaceTranslations as daInterfaceTranslations } from "./da";
 export { default as de, countryTranslations as deCountryTranslations, interfaceTranslations as deInterfaceTranslations } from "./de";
+export { default as ee, countryTranslations as eeCountryTranslations, interfaceTranslations as eeInterfaceTranslations } from "./ee";
 export { default as el, countryTranslations as elCountryTranslations, interfaceTranslations as elInterfaceTranslations } from "./el";
 export { default as en, countryTranslations as enCountryTranslations, interfaceTranslations as enInterfaceTranslations } from "./en";
 export { default as es, countryTranslations as esCountryTranslations, interfaceTranslations as esInterfaceTranslations } from "./es";
@@ -34,5 +35,6 @@ export { default as th, countryTranslations as thCountryTranslations, interfaceT
 export { default as tr, countryTranslations as trCountryTranslations, interfaceTranslations as trInterfaceTranslations } from "./tr";
 export { default as uk, countryTranslations as ukCountryTranslations, interfaceTranslations as ukInterfaceTranslations } from "./uk";
 export { default as ur, countryTranslations as urCountryTranslations, interfaceTranslations as urInterfaceTranslations } from "./ur";
+export { default as uz, countryTranslations as uzCountryTranslations, interfaceTranslations as uzInterfaceTranslations } from "./uz";
 export { default as vi, countryTranslations as viCountryTranslations, interfaceTranslations as viInterfaceTranslations } from "./vi";
 export { default as zh, countryTranslations as zhCountryTranslations, interfaceTranslations as zhInterfaceTranslations } from "./zh";

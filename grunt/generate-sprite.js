@@ -1,12 +1,21 @@
 const fs = require('fs');
 const path = require('path');
-const sharp = require('sharp');
-const supportedCountries = require('../build/js/data.js');
+// ts-node allows us to require TypeScript files
+require("ts-node").register();
+const supportedCountries = require('../src/js/intl-tel-input/data.ts').default;
 
 module.exports = function(grunt) {
   grunt.registerTask('generate-sprite', async function() {
-    const supportedFilenames = supportedCountries.map(country => `${country.iso2}.svg`).sort();
     const done = this.async();
+    // Require "sharp" on demand, else Travis was breaking with "Error: Could not load the "sharp" module using the linux-x64 runtime" when Travis doesn't even use this task
+    const sharp = require('sharp');
+    // ensure /build/img/ dir exists before trying to write to it
+    const buildImgDir = path.join(__dirname, '..', 'build', 'img');
+    if (!fs.existsSync(buildImgDir)) {
+      fs.mkdirSync(buildImgDir, { recursive: true });
+    }
+
+    const supportedFilenames = supportedCountries.map(country => `${country.iso2}.svg`).sort();
 
     // customise this number to change the size of the flags (NOTE: flags are 4x3 ratio)
     const TARGET_HEIGHT = 12;
@@ -127,7 +136,7 @@ module.exports = function(grunt) {
       }
     };
 
-    const createSprite = async (images, width, height, outputFile, format) => {
+  const createSprite = async (images, width, height, outputFile, format) => {
       const combinedImage = sharp({
         create: {
           width: width,

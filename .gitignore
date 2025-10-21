@@ -8,7 +8,9 @@
 /.idea/
 *.iml
 .DS_Store
-/build/js/i18n/types.js
-
-# these files are now auto-generated
-/src/img/
+/build/
+/react/build/
+/vue/build/
+/angular/build/
+/*/demo/*/*-bundle.js
+/test-results/

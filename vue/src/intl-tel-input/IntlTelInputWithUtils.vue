@@ -87,6 +87,7 @@ onMounted(() => {
     if (props.disabled) {
       instance.value.setDisabled(props.disabled);
     }
+    wasPreviouslyValid.value = isValid();
   }
 });
 
@@ -103,7 +104,7 @@ defineExpose({ instance, input });
 <template>
   <input
     ref="input"
-    v-model="model"
+    v-model.lazy="model"
     type="tel"
     @countrychange="updateCountry"
     @input="updateValue"
