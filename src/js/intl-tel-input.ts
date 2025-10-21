@@ -850,6 +850,10 @@ export class Iti {
         else if (e.key === KEYS.ENTER) {
           this._handleEnterKey();
         }
+        //* Spacebar to select.
+        else if (e.key === KEYS.SPACE) {
+          this._handleEnterKey();
+        }
         //* Esc to close
         else if (e.key === KEYS.ESC) {
           this._closeDropdown();
@@ -1240,11 +1244,6 @@ export class Iti {
 
   //* Called when the user selects a list item from the dropdown.
   private _selectListItem(listItem: HTMLElement): void {
-    // @change clear for screen readers
-    const screenReader = document.querySelector("#screen-reader-announcements");
-    if (screenReader) {
-      screenReader.innerHTML = "";
-    }
     //* Update selected country and active list item.
     const iso2 = listItem.dataset[DATA_KEYS.COUNTRY_CODE] as Iso2;
     const countryChanged = this._setCountry(iso2);
@@ -1263,13 +1262,6 @@ export class Iti {
 
     if (countryChanged) {
       this._triggerCountryChange();
-      // @change announce selected country code on change if not firefox
-      if (!navigator.userAgent.match(/Firefox/)) {
-        // @change announce selected country code on change
-        if (screenReader) {
-          screenReader.innerHTML = this.selectedCountry.getAttribute("title");
-        }
-      }
     }
   }
 

@@ -362,6 +362,7 @@ export default class UI {
         tabindex: "-1",
         role: "option",
         [ARIA.SELECTED]: "false",
+        [ARIA.LABEL]: `${c.name}, +${c.dialCode}`,
       });
       listItem.dataset.dialCode = c.dialCode;
       listItem.dataset.countryCode = c.iso2;
@@ -371,17 +372,19 @@ export default class UI {
 
       // Build contents without innerHTML for safety and clarity
       if (this.options.showFlags) {
-        createEl("div", { class: `${CLASSES.FLAG} iti__${c.iso2}` }, listItem);
+        createEl("div", { class: `${CLASSES.FLAG} iti__${c.iso2}`, [ARIA.HIDDEN]: "true" }, listItem);
       }
 
       const nameEl = createEl("span", { class: "iti__country-name" }, listItem);
       nameEl.textContent = c.name;
+      nameEl.setAttribute(ARIA.HIDDEN, "true");
 
       const dialEl = createEl("span", { class: "iti__dial-code" }, listItem);
       if (this.isRTL) {
         dialEl.setAttribute("dir", "ltr");
       }
       dialEl.textContent = `+${c.dialCode}`;
+      dialEl.setAttribute(ARIA.HIDDEN, "true");
 
       frag.appendChild(listItem);
     }
@@ -502,6 +505,8 @@ export default class UI {
     if (this.highlightedItem) {
       this.highlightedItem.classList.add(CLASSES.HIGHLIGHT);
       this.highlightedItem.setAttribute(ARIA.SELECTED, "true");
+      // Announce highlighted item to screen readers
+      this.searchResultsA11yText.textContent = this.highlightedItem.textContent || "";
       if (this.options.countrySearch) {
         const activeDescendant = this.highlightedItem.getAttribute("id") || "";
         this.searchInput.setAttribute(ARIA.ACTIVE_DESCENDANT, activeDescendant);
@@ -509,7 +514,10 @@ export default class UI {
     }
 
     if (shouldFocus) {
-      this.highlightedItem.focus();
+      // Only focus on Firefox to improve screen reader compatibility
+      if (navigator.userAgent.match(/Firefox/)) {
+        this.highlightedItem.focus();
+      }
     }
   }
 
